@@ -1,7 +1,7 @@
 {
   "name": "cdbtiles",
   "version": "0.0.1",
-  "description": "Tilelive backend for using CouchDB as a source/sink for map image tiles (ie. a tileserver)",
+  "description": "cdbtiles is a tilelive backend plug-in for CouchDB",
   "main": "index.js",
   "dependencies": {
     "tilelive": "~4.5.2",
