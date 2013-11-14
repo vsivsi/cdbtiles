@@ -1,0 +1,36 @@
+{
+  "name": "cdbtiles",
+  "version": "0.0.1",
+  "description": "Tilelive backend for using CouchDB as a source/sink for map image tiles (ie. a tileserver)",
+  "main": "index.js",
+  "dependencies": {
+    "tilelive": "~4.5.2",
+    "nano": "~4.1.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified, requires CouchDB to run/test.\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vsivsi/cdbtiles.git"
+  },
+  "keywords": [
+    "couchdb",
+    "tilelive",
+    "tilejson",
+    "tilemill",
+    "mbtiles",
+    "map",
+    "server"
+  ],
+  "engine": {
+    "node": ">=0.8"
+  },
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/vsivsi/cdbtiles/issues"
+  },
+  "author": "Vaughn Iverson",
+  "license": "MIT/X11"
+}
