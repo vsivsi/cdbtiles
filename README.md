@@ -5,7 +5,7 @@ cdbtiles is a [tilelive.js](https://github.com/mapbox/tilelive.js) backend (sour
 
 Q: What the heck does that mean?  
 
-A: With this installed, you can read/write rendered map image tiles from other tilelive.js sources/sinks (mbtiles, Mapnik, TileJSON, S3, etc.)
+A: With this installed, you can use CouchDB to read/write map image tiles from other tilelive.js sources/sinks (mbtiles, Mapnik, TileJSON, S3, etc.)
 
 Q: Come again?
 
