@@ -37,7 +37,6 @@ path = require 'path'
 fs = require 'fs'
 url = require 'url'
 tilelive = require 'tilelive'
-tilejson = require 'tilejson'
 nano = require 'nano'
 
 protocol = 'cdbtiles'

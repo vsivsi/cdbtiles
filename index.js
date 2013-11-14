@@ -36,7 +36,7 @@
 
 
 (function() {
-  var Tilecouch, fs, get_mime_type, grid_name, nano, path, protocol, tile_name, tilejson, tilejson_name, tilelive, url,
+  var Tilecouch, fs, get_mime_type, grid_name, nano, path, protocol, tile_name, tilejson_name, tilelive, url,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   path = require('path');
@@ -46,8 +46,6 @@
   url = require('url');
 
   tilelive = require('tilelive');
-
-  tilejson = require('tilejson');
 
   nano = require('nano');
 
