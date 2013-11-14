@@ -45,11 +45,12 @@ You should be able to easily copy all of your data from the .mbtiles file to you
 
 And then:
 
-     ./node-modules/tilelive/bin/copy -s pyramid --minzoom=10 --maxzoom=18  "mbtiles:///Users/user/maps/Columbus.mbtiles" "cdbtiles://127.0.0.1:5984/columbus_tiles/"
+     ./node_modules/tilelive/bin/copy -s pyramid --minzoom=10 --maxzoom=18  "mbtiles:///Users/user/maps/Columbus.mbtiles" "cdbtiles://127.0.0.1:5984/columbus_tiles/"
+
+The `copy` command above is a sample application provided by tilelive.js, and it has a bunch more options that you should check out. Tilelive is actually an API that any other app can use, so cdbtiles should enable CouchDB to play nicely with apps and other data sources/sinks that also support tilelive. The source and sink URIs have custom protocols (mbtiles: and cdbtiles:) that tilelive knows what to do with via the backend plugins you've now installed.  
 
 Now, if you point a [Leaflet](http://leafletjs.com/) enabled web page page to `http://127.0.0.1:5984/columbus_tiles/tile_{z}_{x}_{y}/tile` you'll be serving up map tiles from CouchDB.  Put that webpage in your CouchDB as well (left as an excercise for the reader), and you now have a self-contained map/application server running on CouchDB. 
 
 For what its worth, this also lets you to serve up the [TileJSON](https://github.com/mapbox/tilejson-spec) information for your maps, just use: `http://127.0.0.1:5984/columbus_tiles/tilejson`
 
-BTW, the `copy` command used above is a sample application provided by tilelive.js, and it has a bunch more options that you should check out. Tilelive is actually an API that any other app can use, so cdbtiles should enable CouchDB to play nicely with apps and other data sources/sinks that also support tilelive.
 
