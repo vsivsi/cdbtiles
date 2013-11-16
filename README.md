@@ -11,7 +11,7 @@ Q: Come again?
 
 A: You can use CouchDB to serve maps over HTTP.
 
-Q: Why would you want to do that?
+Q: Why would one want to do that?
 
 A: For the same reasons you might want to do anything else with CouchDB... As one example, you could write a self-contained [CouchApp](http://www.couchapp.org/page/what-is-couchapp) with mapping functionality.
 
@@ -51,6 +51,6 @@ The `copy` command above is a sample application provided by tilelive.js, and it
 
 Now, if you point a [Leaflet](http://leafletjs.com/) enabled web page page to `http://127.0.0.1:5984/columbus_tiles/tile_{z}_{x}_{y}/tile` you'll be serving up map tiles from CouchDB.  Put that webpage in your CouchDB as well (left as an excercise for the reader), and you now have a self-contained map/application server running on CouchDB. 
 
-For what its worth, this also lets you to serve up the [TileJSON](https://github.com/mapbox/tilejson-spec) information for your maps, just use: `http://127.0.0.1:5984/columbus_tiles/tilejson`
+For what it's worth, this also lets you to serve up the [TileJSON](https://github.com/mapbox/tilejson-spec) information for your maps, just use: `http://127.0.0.1:5984/columbus_tiles/tilejson`
 
 
