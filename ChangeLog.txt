@@ -1,0 +1,13 @@
+cdbtiles version history
+
+Version 0.0.2
+
+- Fixed a bug using cdbtiles as a tile source when non-existent tiles were
+requested, such as when no lat/lon ranges were specified to the tilelive 
+copy command. Fix involved translating the CouchDB 404 error returned to
+a custom 'Tile does not exist' error that tilelive expects and handles
+gracefully.
+
+Version 0.0.1
+
+- Initial version.
