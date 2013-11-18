@@ -105,6 +105,7 @@ class Tilecouch
         tile_url.pathname = tile_url.path
         @db_name = tile_url.path[1...-1]
         @source = url.format tile_url
+        @couchdb = @db.use @db_name
         callback null, @
 
     close : (callback) ->
@@ -119,11 +120,25 @@ class Tilecouch
 
     getTile : (z, x, y, callback) ->
         tn = tile_name z, x, y
-        @couchdb.attachment.get tn.path, tn.name, {}, callback
+        @couchdb.attachment.get tn.path, tn.name, {}, (err, data) -> 
+            if err
+                if err.status_code is 404
+                    callback new Error('Tile does not exist')
+                else
+                    callback err
+            else
+                callback null, data
 
     getGrid : (z, x, y, callback) ->
         gn = grid_name z, x, y
-        @couchdb.attachment.get gn.path, gn.name, {}, callback
+        @couchdb.attachment.get gn.path, gn.name, {}, (err, data) -> 
+            if err
+                if err.status_code is 404
+                    callback new Error('Grid does not exist')
+                else
+                    callback err
+            else
+                callback null, data
 
     startWriting : (callback) ->
         @starts += 1

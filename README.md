@@ -17,7 +17,7 @@ A: For the same reasons you might want to do anything else with CouchDB... As on
 
 Q: Where do the maps come from?
 
-A: That's a really big question.  Weeks are probably required to fully grok what you are asking here.  
+A: That's a really big question.  Many days of poking around may be required to fully grok what you are asking here.  
 
 Places to start:  
 

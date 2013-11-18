@@ -131,6 +131,7 @@
       tile_url.pathname = tile_url.path;
       this.db_name = tile_url.path.slice(1, -1);
       this.source = url.format(tile_url);
+      this.couchdb = this.db.use(this.db_name);
       callback(null, this);
     }
 
@@ -153,13 +154,33 @@
     Tilecouch.prototype.getTile = function(z, x, y, callback) {
       var tn;
       tn = tile_name(z, x, y);
-      return this.couchdb.attachment.get(tn.path, tn.name, {}, callback);
+      return this.couchdb.attachment.get(tn.path, tn.name, {}, function(err, data) {
+        if (err) {
+          if (err.status_code === 404) {
+            return callback(new Error('Tile does not exist'));
+          } else {
+            return callback(err);
+          }
+        } else {
+          return callback(null, data);
+        }
+      });
     };
 
     Tilecouch.prototype.getGrid = function(z, x, y, callback) {
       var gn;
       gn = grid_name(z, x, y);
-      return this.couchdb.attachment.get(gn.path, gn.name, {}, callback);
+      return this.couchdb.attachment.get(gn.path, gn.name, {}, function(err, data) {
+        if (err) {
+          if (err.status_code === 404) {
+            return callback(new Error('Grid does not exist'));
+          } else {
+            return callback(err);
+          }
+        } else {
+          return callback(null, data);
+        }
+      });
     };
 
     Tilecouch.prototype.startWriting = function(callback) {
