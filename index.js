@@ -118,7 +118,6 @@
       if (!tilepath_match) {
         return callback(new Error("Bad tile url path '" + tile_url.pathname + "' for " + protocol + "."));
       }
-      path = tile_url.path;
       tile_url.path = '';
       tile_url.pathname = '';
       tile_url.query = '';
@@ -152,7 +151,8 @@
     };
 
     Tilecouch.prototype.getTile = function(z, x, y, callback) {
-      var tn;
+      var tn,
+        _this = this;
       tn = tile_name(z, x, y);
       return this.couchdb.attachment.get(tn.path, tn.name, {}, function(err, data) {
         if (err) {
@@ -168,7 +168,8 @@
     };
 
     Tilecouch.prototype.getGrid = function(z, x, y, callback) {
-      var gn;
+      var gn,
+        _this = this;
       gn = grid_name(z, x, y);
       return this.couchdb.attachment.get(gn.path, gn.name, {}, function(err, data) {
         if (err) {
@@ -228,7 +229,7 @@
     Tilecouch.prototype.putInfo = function(info, callback) {
       var gn, tn;
       if (!this.starts) {
-        callback(new Error("Error, writing not started."));
+        return callback(new Error("Error, writing not started."));
       }
       tn = tile_name();
       info.tiles = ["" + this.source + tn.path + "/" + tn.name];
@@ -242,7 +243,7 @@
     Tilecouch.prototype.putTile = function(z, x, y, tile, callback) {
       var tn, type;
       if (!this.starts) {
-        callback(new Error("Error, writing not started."));
+        return callback(new Error("Error, writing not started."));
       }
       tn = tile_name(z, x, y);
       type = get_mime_type(tile);
@@ -252,7 +253,7 @@
     Tilecouch.prototype.putGrid = function(z, x, y, grid, callback) {
       var gn;
       if (!this.starts) {
-        callback(new Error("Error, writing not started."));
+        return callback(new Error("Error, writing not started."));
       }
       gn = grid_name(z, x, y);
       return this.couchdb.attachment.insert(gn.path, gn.name, grid, 'application/json', {}, callback);

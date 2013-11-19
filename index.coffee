@@ -92,7 +92,6 @@ class Tilecouch
         tilepath_match = tile_url.pathname.match new RegExp "(/[^/]+/)(#{tilejson_name})?"
         unless tilepath_match
             return callback new Error "Bad tile url path '#{tile_url.pathname}' for #{protocol}."
-        path = tile_url.path
         tile_url.path = ''
         tile_url.pathname = ''
         tile_url.query = ''
@@ -120,7 +119,7 @@ class Tilecouch
 
     getTile : (z, x, y, callback) ->
         tn = tile_name z, x, y
-        @couchdb.attachment.get tn.path, tn.name, {}, (err, data) -> 
+        @couchdb.attachment.get tn.path, tn.name, {}, (err, data) => 
             if err
                 if err.status_code is 404
                     callback new Error('Tile does not exist')
@@ -131,7 +130,7 @@ class Tilecouch
 
     getGrid : (z, x, y, callback) ->
         gn = grid_name z, x, y
-        @couchdb.attachment.get gn.path, gn.name, {}, (err, data) -> 
+        @couchdb.attachment.get gn.path, gn.name, {}, (err, data) => 
             if err
                 if err.status_code is 404
                     callback new Error('Grid does not exist')
@@ -166,7 +165,7 @@ class Tilecouch
 
     putInfo : (info, callback) ->
         unless @starts
-            callback new Error "Error, writing not started."
+            return callback new Error "Error, writing not started."
         tn = tile_name()    
         info.tiles = [ "#{@source}#{tn.path}/#{tn.name}" ]
         if info.grids?
@@ -176,14 +175,14 @@ class Tilecouch
 
     putTile : (z, x, y, tile, callback) ->
         unless @starts
-            callback new Error "Error, writing not started."
+            return callback new Error "Error, writing not started."
         tn = tile_name z, x, y 
         type = get_mime_type tile
         @couchdb.attachment.insert tn.path, tn.name, tile, type, {}, callback
 
     putGrid : (z, x, y, grid, callback) ->
         unless @starts
-            callback new Error "Error, writing not started."
+            return callback new Error "Error, writing not started."
         gn = grid_name z, x, y
         @couchdb.attachment.insert gn.path, gn.name, grid, 'application/json', {}, callback 
 
