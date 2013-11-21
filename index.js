@@ -150,14 +150,19 @@
       });
     };
 
-    Tilecouch.prototype.getTile = function(z, x, y, callback) {
+    Tilecouch.prototype.getTile = function(z, x, y, callback, timeout) {
       var tn,
         _this = this;
+      if (timeout == null) {
+        timeout = 500;
+      }
       tn = tile_name(z, x, y);
       return this.couchdb.attachment.get(tn.path, tn.name, {}, function(err, data) {
         if (err) {
           if (err.status_code === 404) {
             return callback(new Error('Tile does not exist'));
+          } else if (timeout <= 32000) {
+            return setTimeout(_this.getTile.bind(_this), timeout, z, x, y, callback, timeout * 2);
           } else {
             return callback(err);
           }
@@ -175,6 +180,8 @@
         if (err) {
           if (err.status_code === 404) {
             return callback(new Error('Grid does not exist'));
+          } else if (timeout <= 32000) {
+            return setTimeout(_this.getGrid.bind(_this), timeout, z, x, y, callback, timeout * 2);
           } else {
             return callback(err);
           }

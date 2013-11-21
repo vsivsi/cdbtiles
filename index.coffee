@@ -117,14 +117,16 @@ class Tilecouch
             delete info._rev
             callback null, info
 
-    getTile : (z, x, y, callback) ->
+    getTile : (z, x, y, callback, timeout = 500) ->
         tn = tile_name z, x, y
         @couchdb.attachment.get tn.path, tn.name, {}, (err, data) => 
             if err
                 if err.status_code is 404
                     callback new Error('Tile does not exist')
+                else if timeout <= 32000
+                    setTimeout @getTile.bind(this), timeout, z, x, y, callback, timeout*2
                 else
-                    callback err
+                    callback err    
             else
                 callback null, data
 
@@ -134,8 +136,10 @@ class Tilecouch
             if err
                 if err.status_code is 404
                     callback new Error('Grid does not exist')
+                else if timeout <= 32000
+                    setTimeout @getGrid.bind(this), timeout, z, x, y, callback, timeout*2
                 else
-                    callback err
+                    callback err    
             else
                 callback null, data
 
