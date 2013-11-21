@@ -51,6 +51,6 @@ The `copy` command above is a sample application provided by tilelive.js, and it
 
 Now, if you point a [Leaflet](http://leafletjs.com/) enabled web page page to `http://127.0.0.1:5984/columbus_tiles/tile_{z}_{x}_{y}/tile` you'll be serving up map tiles from CouchDB.  Put that webpage in your CouchDB as well (left as an excercise for the reader), and you now have a self-contained map/application server running on CouchDB. 
 
-For what it's worth, this also lets you to serve up the [TileJSON](https://github.com/mapbox/tilejson-spec) information for your maps, just use: `http://127.0.0.1:5984/columbus_tiles/tilejson`
+For what it's worth, this also lets you serve up the [TileJSON](https://github.com/mapbox/tilejson-spec) information for your maps, just use: `http://127.0.0.1:5984/columbus_tiles/tilejson`
 
 
