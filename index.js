@@ -172,9 +172,12 @@
       });
     };
 
-    Tilecouch.prototype.getGrid = function(z, x, y, callback) {
+    Tilecouch.prototype.getGrid = function(z, x, y, callback, timeout) {
       var gn,
         _this = this;
+      if (timeout == null) {
+        timeout = 500;
+      }
       gn = grid_name(z, x, y);
       return this.couchdb.attachment.get(gn.path, gn.name, {}, function(err, data) {
         if (err) {
@@ -247,23 +250,43 @@
       return this.couchdb.insert(info, tilejson_name, callback);
     };
 
-    Tilecouch.prototype.putTile = function(z, x, y, tile, callback) {
-      var tn, type;
+    Tilecouch.prototype.putTile = function(z, x, y, tile, callback, timeout) {
+      var tn, type,
+        _this = this;
+      if (timeout == null) {
+        timeout = 500;
+      }
       if (!this.starts) {
         return callback(new Error("Error, writing not started."));
       }
       tn = tile_name(z, x, y);
       type = get_mime_type(tile);
-      return this.couchdb.attachment.insert(tn.path, tn.name, tile, type, {}, callback);
+      return this.couchdb.attachment.insert(tn.path, tn.name, tile, type, {}, function(err) {
+        if (err && timeout <= 32000) {
+          return setTimeout(_this.putTile.bind(_this), timeout, z, x, y, tile, callback, timeout * 2);
+        } else {
+          return callback(err);
+        }
+      });
     };
 
-    Tilecouch.prototype.putGrid = function(z, x, y, grid, callback) {
-      var gn;
+    Tilecouch.prototype.putGrid = function(z, x, y, grid, callback, timeout) {
+      var gn,
+        _this = this;
+      if (timeout == null) {
+        timeout = 500;
+      }
       if (!this.starts) {
         return callback(new Error("Error, writing not started."));
       }
       gn = grid_name(z, x, y);
-      return this.couchdb.attachment.insert(gn.path, gn.name, grid, 'application/json', {}, callback);
+      return this.couchdb.attachment.insert(gn.path, gn.name, grid, 'application/json', {}, function(err) {
+        if (err && timeout <= 32000) {
+          return setTimeout(_this.putTile.bind(_this), timeout, z, x, y, tile, callback, timeout * 2);
+        } else {
+          return callback(err);
+        }
+      });
     };
 
     return Tilecouch;

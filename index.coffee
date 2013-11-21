@@ -130,7 +130,7 @@ class Tilecouch
             else
                 callback null, data
 
-    getGrid : (z, x, y, callback) ->
+    getGrid : (z, x, y, callback, timeout = 500) ->
         gn = grid_name z, x, y
         @couchdb.attachment.get gn.path, gn.name, {}, (err, data) => 
             if err
@@ -177,18 +177,26 @@ class Tilecouch
             info.grids = [ "#{@source}#{gn.path}/#{gn.name}" ]
         @couchdb.insert info, tilejson_name, callback 
 
-    putTile : (z, x, y, tile, callback) ->
+    putTile : (z, x, y, tile, callback, timeout = 500) ->
         unless @starts
             return callback new Error "Error, writing not started."
         tn = tile_name z, x, y 
         type = get_mime_type tile
-        @couchdb.attachment.insert tn.path, tn.name, tile, type, {}, callback
+        @couchdb.attachment.insert tn.path, tn.name, tile, type, {}, (err) =>
+            if err and timeout <= 32000
+                setTimeout @putTile.bind(this), timeout, z, x, y, tile, callback, timeout*2
+            else
+                callback err    
 
-    putGrid : (z, x, y, grid, callback) ->
+    putGrid : (z, x, y, grid, callback, timeout = 500) ->
         unless @starts
             return callback new Error "Error, writing not started."
         gn = grid_name z, x, y
-        @couchdb.attachment.insert gn.path, gn.name, grid, 'application/json', {}, callback 
-
+        @couchdb.attachment.insert gn.path, gn.name, grid, 'application/json', {}, (err) =>
+            if err and timeout <= 32000
+                setTimeout @putTile.bind(this), timeout, z, x, y, tile, callback, timeout*2
+            else
+                callback err    
+                
 module.exports = Tilecouch
 
