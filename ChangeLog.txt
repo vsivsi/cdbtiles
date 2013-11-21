@@ -1,5 +1,10 @@
 cdbtiles version history
 
+Version 0.0.3
+
+- Added support for retrying when CouchDB occasionally stops responding 
+when under heavy load.  Also fixed some typos in documentation.
+
 Version 0.0.2
 
 - Fixed a bug using cdbtiles as a tile source when non-existent tiles were
