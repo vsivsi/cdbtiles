@@ -2,10 +2,10 @@
 /*
 #
 # Copyright (C) 2013 by Vaughn Iverson
-# 
+#
 # cdbtiles
 #
-# With this you can use a CouchDB as a "tilelive.js" source or sink for 
+# With this you can use a CouchDB as a "tilelive.js" source or sink for
 # map tile / grid / tilejson data.
 #
 # See: https://github.com/mapbox/tilelive.js
@@ -282,7 +282,7 @@
       gn = grid_name(z, x, y);
       return this.couchdb.attachment.insert(gn.path, gn.name, grid, 'application/json', {}, function(err) {
         if (err && timeout <= 32000) {
-          return setTimeout(_this.putTile.bind(_this), timeout, z, x, y, tile, callback, timeout * 2);
+          return setTimeout(_this.putGrid.bind(_this), timeout, z, x, y, grid, callback, timeout * 2);
         } else {
           return callback(err);
         }

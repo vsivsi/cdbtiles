@@ -1,10 +1,10 @@
 ###
 #
 # Copyright (C) 2013 by Vaughn Iverson
-# 
+#
 # cdbtiles
 #
-# With this you can use a CouchDB as a "tilelive.js" source or sink for 
+# With this you can use a CouchDB as a "tilelive.js" source or sink for
 # map tile / grid / tilejson data.
 #
 # See: https://github.com/mapbox/tilelive.js
@@ -41,33 +41,33 @@ nano = require 'nano'
 
 protocol = 'cdbtiles'
 
-tile_name = (z, x, y) -> 
-    if x? and y? and z?  
+tile_name = (z, x, y) ->
+    if x? and y? and z?
         { path : "tile_#{z}_#{x}_#{y}", name : 'tile' }
     else
         { path : 'tile_{z}_{x}_{y}', name : 'tile' }
 
 
-grid_name = (z, x, y) -> 
-    if x? and y? and z?  
+grid_name = (z, x, y) ->
+    if x? and y? and z?
         { path : "grid_#{z}_#{x}_#{y}", name : 'grid' }
     else
         { path : 'grid_{z}_{x}_{y}', name : 'grid' }
 
 tilejson_name = "tilejson"
 
-# Image type magic numbers snarfed from https://github.com/mapbox/node-tilejson 
+# Image type magic numbers snarfed from https://github.com/mapbox/node-tilejson
 get_mime_type = (bytes) ->
     if (bytes[0] is 0x89 and bytes[1] is 0x50 and bytes[2] is 0x4E and
         bytes[3] is 0x47 and bytes[4] is 0x0D and bytes[5] is 0x0A and
-        bytes[6] is 0x1A and bytes[7] is 0x0A) 
+        bytes[6] is 0x1A and bytes[7] is 0x0A)
             return 'image/png'
     else if (bytes[0] is 0xFF and bytes[1] is 0xD8 and
-        bytes[bytes.length - 2] is 0xFF and bytes[bytes.length - 1] is 0xD9) 
+        bytes[bytes.length - 2] is 0xFF and bytes[bytes.length - 1] is 0xD9)
             return 'image/jpeg'
     else if (bytes[0] is 0x47 and bytes[1] is 0x49 and bytes[2] is 0x46 and
         bytes[3] is 0x38 and (bytes[4] is 0x39 or bytes[4] is 0x37) and
-        bytes[5] is 0x61) 
+        bytes[5] is 0x61)
             return 'image/gif'
     else
         console.warn "#{protocol}: Image data with unknown MIME type in putTile call to get_mime_type."
@@ -77,7 +77,7 @@ class Tilecouch
 
     @registerProtocols = (tilelive) ->
         tilelive.protocols["#{protocol}:"] = @
-    
+
     @list = (filepath, callback) ->
         callback new Error ".list not implemented for #{protocol}"
 
@@ -111,7 +111,7 @@ class Tilecouch
         callback null
 
     getInfo : (callback) ->
-        @couchdb.get tilejson_name, {}, (err, info) =>  
+        @couchdb.get tilejson_name, {}, (err, info) =>
             return callback err if err
             delete info._id
             delete info._rev
@@ -119,27 +119,27 @@ class Tilecouch
 
     getTile : (z, x, y, callback, timeout = 500) ->
         tn = tile_name z, x, y
-        @couchdb.attachment.get tn.path, tn.name, {}, (err, data) => 
+        @couchdb.attachment.get tn.path, tn.name, {}, (err, data) =>
             if err
                 if err.status_code is 404
                     callback new Error('Tile does not exist')
                 else if timeout <= 32000
                     setTimeout @getTile.bind(this), timeout, z, x, y, callback, timeout*2
                 else
-                    callback err    
+                    callback err
             else
                 callback null, data
 
     getGrid : (z, x, y, callback, timeout = 500) ->
         gn = grid_name z, x, y
-        @couchdb.attachment.get gn.path, gn.name, {}, (err, data) => 
+        @couchdb.attachment.get gn.path, gn.name, {}, (err, data) =>
             if err
                 if err.status_code is 404
                     callback new Error('Grid does not exist')
                 else if timeout <= 32000
                     setTimeout @getGrid.bind(this), timeout, z, x, y, callback, timeout*2
                 else
-                    callback err    
+                    callback err
             else
                 callback null, data
 
@@ -162,7 +162,7 @@ class Tilecouch
                             return callback err if err
                             @couchdb = @db.use @db_name
                             callback null
-        
+
     stopWriting : (callback) ->
         @starts -= 1
         callback null
@@ -170,23 +170,23 @@ class Tilecouch
     putInfo : (info, callback) ->
         unless @starts
             return callback new Error "Error, writing not started."
-        tn = tile_name()    
+        tn = tile_name()
         info.tiles = [ "#{@source}#{tn.path}/#{tn.name}" ]
         if info.grids?
-            gn = grid_name()    
+            gn = grid_name()
             info.grids = [ "#{@source}#{gn.path}/#{gn.name}" ]
-        @couchdb.insert info, tilejson_name, callback 
+        @couchdb.insert info, tilejson_name, callback
 
     putTile : (z, x, y, tile, callback, timeout = 500) ->
         unless @starts
             return callback new Error "Error, writing not started."
-        tn = tile_name z, x, y 
+        tn = tile_name z, x, y
         type = get_mime_type tile
         @couchdb.attachment.insert tn.path, tn.name, tile, type, {}, (err) =>
             if err and timeout <= 32000
                 setTimeout @putTile.bind(this), timeout, z, x, y, tile, callback, timeout*2
             else
-                callback err    
+                callback err
 
     putGrid : (z, x, y, grid, callback, timeout = 500) ->
         unless @starts
@@ -194,9 +194,9 @@ class Tilecouch
         gn = grid_name z, x, y
         @couchdb.attachment.insert gn.path, gn.name, grid, 'application/json', {}, (err) =>
             if err and timeout <= 32000
-                setTimeout @putTile.bind(this), timeout, z, x, y, tile, callback, timeout*2
+                setTimeout @putGrid.bind(this), timeout, z, x, y, grid, callback, timeout*2
             else
-                callback err    
-                
+                callback err
+
 module.exports = Tilecouch
 

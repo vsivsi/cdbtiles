@@ -1,11 +1,11 @@
 {
   "name": "cdbtiles",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "cdbtiles is a tilelive backend plug-in for CouchDB",
   "main": "index.js",
   "dependencies": {
-    "tilelive": "~4.5.2",
-    "nano": "~4.1.4"
+    "tilelive": "~4.5.3",
+    "nano": "~4.2.1"
   },
   "devDependencies": {},
   "scripts": {
